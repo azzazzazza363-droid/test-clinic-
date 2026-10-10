@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة عيادة الأسنان</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+            color: #333;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        /* ترويسة الصفحة مع حقل الأمان */
+        .header-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        h2 {
+            color: #1e3a8a;
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .auth-box {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .auth-box input {
+            padding: 8px 12px;
+            border: 1px solid #ef4444;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 150px;
+            background-color: #fff5f5;
+        }
+        .auth-box button {
+            padding: 8px 15px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .auth-box button:hover {
+            background-color: #dc2626;
+        }
+
+        /* تنسيق النموذج بشكل أفقي وبحقول متساوية */
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 120px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1e40af;
+            font-size: 13px;
+        }
+        
+        /* ألوان أفتح بقليل، جذابة ومميزة ومريحة للنظر للمربعات */
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #94a3b8;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: #f8fafc; /* خلفية ناعمة جداً ومضيئة ومريحة للعين */
+            color: #0f172a; /* نص داكن وواضح للغاية للقراءة المريحة */
+            transition: all 0.3s ease;
+        }
+
+        /* تأثير تفاعلي مميز وجذاب عند الوقوف أو الكتابة داخل المربع */
+        input:focus, select:focus {
+            border-color: #2563eb;
+            background-color: #ffffff; /* يتحول إلى أبيض ناصع عند التركيز للوضوح التام */
+            color: #000000;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        input:readonly {
+            background-color: #e2e8f0;
+            color: #475569;
+            border-color: #cbd5e1;
+        }
+
+        .btn-container {
+            margin-top: 15px;
+        }
+        button[type="submit"] {
+            background-color: #059669;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+        }
+        button[type="submit"]:hover {
+            background-color: #047857;
+        }
+        .btn-cancel {
+            background-color: #dc2626;
+            margin-top: 8px;
+            width: 100%;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .btn-cancel:hover {
+            background-color: #b91c1c;
+        }
+
+        /* شريط البحث السريع */
+        .search-box {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #94a3b8;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .search-box input:focus {
+            background-color: #ffffff;
+        }
+
+        /* الجدول الاحترافي */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        table, th, td {
+            border: 1px solid #cbd5e1;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background-color: #1e3a8a;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .action-btns button {
+            padding: 6px 10px;
+            font-size: 12px;
+            margin: 2px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-edit {
+            background-color: #d97706;
+        }
+        .btn-edit:hover {
+            background-color: #b45309;
+        }
+        .btn-delete {
+            background-color: #dc2626;
+        }
+        .btn-delete:hover {
+            background-color: #b91c1c;
+        }
+        
+        /* افتراضياً: شاشة الحماية ظاهرة ومحتوى النظام مخفي تماماً */
+        #systemContent {
+            display: none;
+        }
+        #authSection {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- الترويسة وواجهة كلمة المرور -->
+    <div class="header-box">
+        <h2 id="formTitle">نظام إدارة عيادة الأسنان</h2>
+        <div id="authSection" class="auth-box">
+            <input type="password" id="clinicPassword" placeholder="كلمة المرور..." onkeydown="if(event.key === 'Enter') checkPassword()">
+            <button type="button" onclick="checkPassword()">دخول</button>
+        </div>
+    </div>
+
+    <!-- محتوى النظام (مغلق ومخفي تماماً حتى يتم إدخال كلمة المرور) -->
+    <div id="systemContent">
+        <form id="patientForm">
+            <input type="hidden" id="editIndex" value="">
+
+            <!-- الصف الأول: اسم المريض، نوع المعالجة، تاريخ التسجيل، وقت الموعد -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="patientName">اسم المريض:</label>
+                    <input type="text" id="patientName" required placeholder="الاسم الثلاثي">
+                </div>
+
+                <div class="form-group">
+                    <label for="treatmentType">نوع المعالجة:</label>
+                    <input type="text" id="treatmentType" required placeholder="مثال: حشو، تنظيف">
+                </div>
+
+                <div class="form-group">
+                    <label for="visitDate">تاريخ التسجيل:</label>
+                    <input type="date" id="visitDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="visitTime">وقت الموعد:</label>
+                    <input type="time" id="visitTime" required>
+                </div>
+            </div>
+
+            <!-- الصف الثاني: العملة، التكلفة الكلية، المدفوع، المتبقي -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="currency">العملة:</label>
+                    <select id="currency">
+                        <option value="$">دولار ($)</option>
+                        <option value="ل.س">ليرة سورية (ل.س)</option>
+                        <option value="ل.ت">ليرة تركية (ل.ت)</option>
+                        <option value="€">يورو (€)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="totalCost">التكلفة الكلية:</label>
+                    <input type="number" id="totalCost" placeholder="0" required oninput="calculateRemaining()">
+                </div>
+
+                <div class="form-group">
+                    <label for="paidAmount">المدفوع:</label>
+                    <input type="number" id="paidAmount" placeholder="0" required oninput="calculateRemaining()">
+                </div>
+
+                <div class="form-group">
+                    <label for="remainingAmount">المتبقي:</label>
+                    <input type="number" id="remainingAmount" placeholder="0" readonly>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" id="submitBtn">حفظ وتسجيل الموعد</button>
+                <button type="button" id="cancelEditBtn" class="btn-cancel" style="display:none;" onclick="cancelEdit()">إلغاء التعديل</button>
+            </div>
+        </form>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+            <h3 style="margin: 0; color: #1e3a8a;">سجلات المرضى</h3>
+        </div>
+
+        <!-- حقل البحث الفوري عن اسم المريض -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 ابحث عن اسم المريض (اكتب الحرف الأول أو الاسم للبحث الفوري)..." oninput="renderTable()">
+        </div>
+
+        <table id="patientsTable">
+            <thead>
+                <tr>
+                    <th>اسم المريض</th>
+                    <th>نوع المعالجة</th>
+                    <th>التاريخ والوقت</th>
+                    <th>التكلفة الكلية</th>
+                    <th>المدفوع</th>
+                    <th>المتبقي</th>
+                    <th>التحكم</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- بيانات المرضى تظهر هنا تلقائياً -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // كلمة المرور الخاصة بهذا الطبيب (تستطيع تغييرها لكل عميل)
+    const CORRECT_PASSWORD = "jojo";
+
+    // توليد بصمة فريدة للجهاز والمتصفح للحماية
+    function getDeviceFingerprint() {
+        const userAgent = navigator.userAgent;
+        const screenRes = `${window.screen.width}x${window.screen.height}`;
+        const colorDepth = window.screen.colorDepth;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        return btoa(`${userAgent}-${screenRes}-${colorDepth}-${timezone}`);
+    }
+
+    // التحقق عند فتح الصفحة
+    window.onload = function() {
+        const savedLogin = localStorage.getItem('clinic_logged_in');
+        const savedDevice = localStorage.getItem('clinic_device_id');
+        const currentDevice = getDeviceFingerprint();
+
+        if (savedLogin === 'true' && savedDevice === currentDevice) {
+            unlockSystem();
+        } else {
+            document.getElementById('systemContent').style.display = 'none';
+            document.getElementById('authSection').style.display = 'flex';
+        }
+    };
+
+    function checkPassword() {
+        const passwordInput = document.getElementById('clinicPassword');
+        const enteredPass = passwordInput ? passwordInput.value : '';
+        
+        if (enteredPass === CORRECT_PASSWORD) {
+            localStorage.setItem('clinic_logged_in', 'true');
+            localStorage.setItem('clinic_device_id', getDeviceFingerprint());
+            unlockSystem();
+        } else {
+            alert('كلمة المرور غير صحيحة!');
+            if (passwordInput) passwordInput.value = '';
+        }
+    }
+
+    function unlockSystem() {
+        const authSec = document.getElementById('authSection');
+        const sysCont = document.getElementById('systemContent');
+        
+        if (authSec) authSec.style.display = 'none';
+        if (sysCont) sysCont.style.display = 'block';
+        
+        const visitDate = document.getElementById('visitDate');
+        if (visitDate) visitDate.valueAsDate = new Date();
+        
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const visitTime = document.getElementById('visitTime');
+        if (visitTime) visitTime.value = `${hours}:${minutes}`;
+
+        renderTable();
+    }
+
+    // حساب المبلغ المتبقي تلقائياً
+    function calculateRemaining() {
+        const total = parseFloat(document.getElementById('totalCost').value) || 0;
+        const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
+        const remaining = total - paid;
+        const remField = document.getElementById('remainingAmount');
+        if (remField) remField.value = remaining >= 0 ? remaining : 0;
+    }
+
+    let patients = JSON.parse(localStorage.getItem('clinic_patients')) || [];
+
+    function renderTable() {
+        const tbody = document.querySelector('#patientsTable tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        
+        const searchInput = document.getElementById('searchInput');
+        const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const filteredPatients = patients.filter(p => p.name.toLowerCase().includes(searchTerm));
+
+        filteredPatients.forEach((p) => {
+            const originalIndex = patients.indexOf(p);
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${p.name}</td>
+                <td>${p.treatment}</td>
+                <td>${p.date} <br><small style="color: #64748b;">الساعة: ${p.time}</small></td>
+                <td>${p.total} ${p.currency}</td>
+                <td>${p.paid} ${p.currency}</td>
+                <td style="color: ${p.remaining > 0 ? '#ef4444' : '#059669'}; font-weight: bold;">${p.remaining} ${p.currency}</td>
+                <td class="action-btns">
+                    <button class="btn-edit" onclick="editPatient(${originalIndex})">تعديل</button>
+                    <button class="btn-delete" onclick="deletePatient(${originalIndex})">حذف</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    const patientForm = document.getElementById('patientForm');
+    if (patientForm) {
+        patientForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const editIndex = document.getElementById('editIndex').value;
+            const name = document.getElementById('patientName').value;
+            const treatment = document.getElementById('treatmentType').value;
+            const date = document.getElementById('visitDate').value;
+            const time = document.getElementById('visitTime').value;
+            const currency = document.getElementById('currency').value;
+            const total = document.getElementById('totalCost').value;
+            const paid = document.getElementById('paidAmount').value;
+            const remaining = document.getElementById('remainingAmount').value;
+
+            const patientData = { name, treatment, date, time, currency, total, paid, remaining };
+
+            if (editIndex === "") {
+                patients.push(patientData);
+                alert('تم تسجيل المريض بنجاح!');
+            } else {
+                patients[editIndex] = patientData;
+                alert('تم تحديث بيانات المريض بنجاح!');
+                cancelEdit();
+            }
+            
+            localStorage.setItem('clinic_patients', JSON.stringify(patients));
+            renderTable();
+            resetForm();
+        });
+    }
+
+    function editPatient(index) {
+        const p = patients[index];
+        document.getElementById('patientName').value = p.name;
+        document.getElementById('treatmentType').value = p.treatment || '';
+        document.getElementById('visitDate').value = p.date;
+        document.getElementById('visitTime').value = p.time;
+        document.getElementById('currency').value = p.currency || '$';
+        document.getElementById('totalCost').value = p.total;
+        document.getElementById('paidAmount').value = p.paid;
+        document.getElementById('remainingAmount').value = p.remaining;
+        
+        document.getElementById('editIndex').value = index;
+        document.getElementById('formTitle').innerText = "تعديل بيانات المريض";
+        document.getElementById('submitBtn').innerText = "تحديث البيانات";
+        document.getElementById('cancelEditBtn').style.display = "block";
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+        resetForm();
+        document.getElementById('editIndex').value = "";
+        document.getElementById('formTitle').innerText = "نظام إدارة عيادة الأسنان";
+        document.getElementById('submitBtn').innerText = "حفظ وتسجيل الموعد";
+        document.getElementById('cancelEditBtn').style.display = "none";
+    }
+
+    function deletePatient(index) {
+        if (confirm('هل أنت متأكد من حذف هذا السجل؟')) {
+            patients.splice(index, 1);
+            localStorage.setItem('clinic_patients', JSON.stringify(patients));
+            renderTable();
+            cancelEdit();
+        }
+    }
+
+    function resetForm() {
+        const form = document.getElementById('patientForm');
+        if (form) form.reset();
+        const visitDate = document.getElementById('visitDate');
+        if (visitDate) visitDate.valueAsDate = new Date();
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const visitTime = document.getElementById('visitTime');
+        if (visitTime) visitTime.value = `${hours}:${minutes}`;
+    }
+</script>
+
+</body>
+</html>
